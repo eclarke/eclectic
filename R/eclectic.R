@@ -7,7 +7,7 @@ blast6_colnames <- c(
 #' @param fp file path to blast output
 #' @param col.names the column names of the BLAST output. The "std" columns are
 #' defined in `blast6_colnames` (default)
-read_blast6 <- function(fp, col.names=blast6.colnames) {
+read_blast6 <- function(fp, col.names=eclectic::blast6.colnames) {
   infile <- read.delim(fp, col.names=col.names, stringsAsFactors = FALSE)
   return(infile)
 }
