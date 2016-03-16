@@ -63,7 +63,6 @@ subset_matrix <- function(s, mat, colname="SampleID") {
 #' @param threshold the limit where the high-range color appears
 #' @param na.value the color to assign to missing taxa
 #' @param scale the the maximum of the proportion (i.e. is it 0-1 scaled or 0-100?)
-#' @import ggplot2
 #' @export
 saturated_rainbow_pct <- function(..., na.value="white", threshold=.4, scale=1) {
   rainbow_colors <- rev(rainbow(100*threshold, start=0, end=0.6))
@@ -91,7 +90,6 @@ saturated_rainbow_pct <- function(..., na.value="white", threshold=.4, scale=1) 
 #' @param na.value the color to assign to missing taxa
 #' @param threshold the proportional limit where the high-range color appears
 #' @param scale the the maximum of the proportion (i.e. is it 0-1 scaled or 0-100?)
-#' @import ggplot2
 #' @export
 saturated_rainbow_cts <- function(..., na.value="white", threshold=.4, scale=1) {
   rainbow_colors <- rev(rainbow(100*threshold, start=0, end=0.6))
@@ -116,14 +114,12 @@ saturated_rainbow_cts <- function(..., na.value="white", threshold=.4, scale=1) 
 #'
 #' @return the same object, with the aspect ratio fixed to be the (number of
 #' rows)/(number of columns)
-#' @import ggplot2
 #' @export
 make_square <- function(p, fudge=1) {
   .x <- as.character(p$mapping$x)
   .y <- as.character(p$mapping$y)
   ncols <- length(unique(p$data[[.x]]))
   nrows <- length(unique(p$data[[.y]]))
-  print(nrows)
   p + ggplot2::theme(aspect.ratio = (nrows/ncols)*fudge)
 }
 
@@ -140,4 +136,23 @@ na_zeros <- function(p) {
   fill[fill==0] <- NA
   p$data[[.fill]] <- fill
   p
+}
+
+
+#' Creates a chunk for a plot with a given figure height and width.
+#' @param p the plot to insert into the chunk
+#' @param width the width of the device
+#' @param height the height of the device
+#' @param name the name of the chunk
+#' @param extras a string to add to the end of the chunk definition, for kicks
+#' @export
+dynamic_chunk <- function(p, width, height, name=NULL, extras=NULL) {
+  chunk_template = "```{r {{name}}, fig.height={{height}}, fig.width={{width}}, echo=FALSE, {{extras}}}
+  p
+  ```"
+  chunk_text = knitr::knit(
+    text=knitr::knit_expand(text=chunk_template, width=width,
+                     height=height, name=name, extras=extras),
+    quiet=TRUE)
+  chunk_text
 }

@@ -10,5 +10,6 @@ Description: Random collections of functions relating to plotting, reading data,
 License: GPL
 LazyData: TRUE
 RoxygenNote: 5.0.1
-Imports:
+Suggests:
+  knitr,
   ggplot2
