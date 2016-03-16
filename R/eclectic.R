@@ -5,6 +5,7 @@ blast6_colnames <- c(
   "qseqid","sseqid","pident","length","mismatch","gapopen","qstart","qend",
   "sstart","send","evalue","bitscore")
 
+
 #' Reads an output file from BLAST in the outfmt=6 format (tab delimited)
 #'
 #' @param fp file path to blast output
@@ -14,4 +15,39 @@ blast6_colnames <- c(
 read_blast6 <- function(fp, col.names=blast6_colnames) {
   infile <- read.delim(fp, col.names=col.names, stringsAsFactors = FALSE)
   return(infile)
+}
+
+
+#' Create a named vector using the values from one column in the second.
+#'
+#' The levels of `a` are used to pick the corresponding values in `b` so that
+#' the named vector returned can be used in e.g. ggplot2::scale label
+#' parameters.
+#'
+#' @param .df the dataframe to reference the columns from
+#' @param a the column whose levels will be used as names
+#' @param b the values of the named vector
+#' @return a named vector
+#' @export
+named_vector <- function(.df, a, b) {
+  la <- levels(as.factor(.df[[a]]))
+  lb <- .df[[b]][match(la, .df[[a]])]
+  setNames(as.character(lb), la)
+}
+
+
+#' Subset a (counts) matrix based on the column from a dataframe.
+#'
+#' This is useful for subsetting a counts matrix based on the sample IDs present
+#' in the sample data dataframe. It then prunes the matrix to remove any rows
+#' whose sums are 0.
+#'
+#' @param s a sample data dataframe
+#' @param mat a counts matrix
+#' @param colname the name of the column to use for subsetting
+#' @return the subsetted matrix
+#' @export
+subset_matrix <- function(s, mat, colname="SampleID") {
+  .mat <- mat[, s[[colname]]]
+  .mat[rowSums(.mat) > 0, ]
 }
