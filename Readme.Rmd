@@ -5,8 +5,11 @@ output:
 ---
 # eclectic
 
-Miscellaneous R functions.
+Miscellaneous R functions. Inspired by https://github.com/kylebittinger/kylemisc.
 
 So far:
 
 - reading blast format 6 output files
+- creating named vector
+- subsetting and pruning count matrices
+- ggplot2 version of qiimer::saturated_rainbow (counts & proportions)
