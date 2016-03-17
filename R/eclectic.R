@@ -105,22 +105,34 @@ saturated_rainbow_cts <- function(..., na.value="white", threshold=.4, scale=1) 
     ...)
 }
 
-#' Uses the number of columns and number of rows in a heatmap to fix the
-#' aspect ratio such that the cells are perfectly square.
+#' Find the dimensions of a ggplot2 heatmap.
 #'
-#' @param p a ggplot object, ideally with discrete x and y aesthetics set
-#' (i.e. a heatmap)
-#' @param fudge a fudge factor multiplying the aspect ratio (< 1 = wider, > 1 = taller)
+#' This works by identifying the number of unique points in the variables mapped
+#' to the x and y axes.
 #'
-#' @return the same object, with the aspect ratio fixed to be the (number of
-#' rows)/(number of columns)
+#' @param p a ggplot2 heatmap (or any ggplot with x and y mappings)
+#' @return a list with the number of rows and columns
 #' @export
-make_square <- function(p, fudge=1) {
+heatmap_dims <- function(p) {
   .x <- as.character(p$mapping$x)
   .y <- as.character(p$mapping$y)
   ncols <- length(unique(p$data[[.x]]))
   nrows <- length(unique(p$data[[.y]]))
-  p + ggplot2::theme(aspect.ratio = (nrows/ncols)*fudge)
+  return(list(ncols=ncols, nrows=nrows))
+}
+
+#' Uses the number of columns and number of rows in a heatmap to fix the
+#' aspect ratio such that the cells are perfectly square.
+#'
+#' @param p a ggplot object with discrete x and y aesthetics set
+#' @param fudge a fudge factor multiplying the aspect ratio (< 1 = wider,
+#'   > 1 = taller). This does not appear to work right now.
+#' @return the same object, with the aspect ratio fixed to be the (number of
+#' rows)/(number of columns)
+#' @export
+make_square <- function(p, fudge=1) {
+  dims <- heatmap_dims(p)
+  p + ggplot2::theme(aspect.ratio = (dims$nrows/dims$ncols)*fudge)
 }
 
 #' Set zeros to NA

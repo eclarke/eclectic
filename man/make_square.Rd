@@ -8,10 +8,10 @@ aspect ratio such that the cells are perfectly square.}
 make_square(p, fudge = 1)
 }
 \arguments{
-\item{p}{a ggplot object, ideally with discrete x and y aesthetics set
-(i.e. a heatmap)}
+\item{p}{a ggplot object with discrete x and y aesthetics set}
 
-\item{fudge}{a fudge factor multiplying the aspect ratio (< 1 = wider, > 1 = taller)}
+\item{fudge}{a fudge factor multiplying the aspect ratio (< 1 = wider,
+> 1 = taller). This does not appear to work right now.}
 }
 \value{
 the same object, with the aspect ratio fixed to be the (number of
