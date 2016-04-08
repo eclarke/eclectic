@@ -2,21 +2,25 @@
 % Please edit documentation in R/eclectic.R
 \name{tax_climber}
 \alias{tax_climber}
-\title{Finds the lowest taxonomic rank that isn't NA, starting at `start`.}
+\title{Finds the lowest taxonomic rank that isn't NA, stopping at `end`.}
 \usage{
-tax_climber(otu, taxonomy, start = "Genus")
+tax_climber(otus, taxonomy, end = "Genus", label = FALSE, sep = ":")
 }
 \arguments{
-\item{otu}{the otu to look for}
+\item{otus}{the otus to look for}
 
 \item{taxonomy}{the taxa annotations, with otus as rownames (important!)}
 
-\item{start}{the starting taxonomic rank}
+\item{end}{the lowest desired taxonomic rank}
+
+\item{label}{label the lowest rank with [kpcofgs]?}
+
+\item{sep}{separator to use between rank label and rank value}
 }
 \value{
-the lowest non-NA taxonomic rank assignment (with rank as name)
+the lowest non-NA taxonomic rank assignment
 }
 \description{
-Finds the lowest taxonomic rank that isn't NA, starting at `start`.
+Finds the lowest taxonomic rank that isn't NA, stopping at `end`.
 }
 

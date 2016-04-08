@@ -251,20 +251,23 @@ Mode <- function(x) {
   ux[which.max(tabulate(match(x, ux)))]
 }
 
-#' Finds the lowest taxonomic rank that isn't NA, starting at `start`.
-#' @param otu the otu to look for
+#' Finds the lowest taxonomic rank that isn't NA, stopping at `end`.
+#' @param otus the otus to look for
 #' @param taxonomy the taxa annotations, with otus as rownames (important!)
-#' @param start the starting taxonomic rank
-#' @return the lowest non-NA taxonomic rank assignment (with rank as name)
+#' @param end the lowest desired taxonomic rank
+#' @param label label the lowest rank with [kpcofgs]?
+#' @param sep separator to use between rank label and rank value
+#' @return the lowest non-NA taxonomic rank assignment
 #' @export
-tax_climber <- function(otu, taxonomy, start="Genus") {
-  start_idx <- which(qiimer::taxonomic_ranks == start)
-  for (i in start_idx:1) {
-    tax_level <- qiimer::taxonomic_ranks[i]
-    taxa <- taxonomy[otu, tax_level]
-    names(taxa) <- tax_level
-
-    if (!is.na(taxa)) return(taxa)
-  }
-  return(NA)
+tax_climber <- function(otus, taxonomy, end="Genus", label=FALSE, sep=":") {
+  end_idx <- which(qiimer::taxonomic_ranks==end)
+  otus <- as.character(otus)
+  taxa <- taxonomy[otus, 1:end_idx]
+  min.ranks <- colnames(taxa)[apply(taxa, 1, function(x) max(which(!is.na(x))))]
+  # browser()
+  lowest <- taxa[cbind(otus, min.ranks)]
+  if (label)
+    paste(tolower(substr(min.ranks, 1, 1)), lowest, sep=sep)
+  else
+    lowest
 }
