@@ -262,9 +262,10 @@ Mode <- function(x) {
 tax_climber <- function(otus, taxonomy, end="Genus", label=FALSE, sep=":") {
   end_idx <- which(qiimer::taxonomic_ranks==end)
   otus <- as.character(otus)
+  if (all(is.na(otus)))
+    return(rep(NA, length(otus)))
   taxa <- taxonomy[otus, 1:end_idx]
   min.ranks <- colnames(taxa)[apply(taxa, 1, function(x) max(which(!is.na(x))))]
-  # browser()
   lowest <- taxa[cbind(otus, min.ranks)]
   if (label)
     paste(tolower(substr(min.ranks, 1, 1)), lowest, sep=sep)
