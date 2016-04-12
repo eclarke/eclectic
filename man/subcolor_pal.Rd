@@ -10,7 +10,7 @@ subcolor_pal(x, f, h = c(0, 360) + 15, c = 100, l = 65, l.range = 20,
 \arguments{
 \item{x}{the vector or factor grouped by f (i.e. Genus)}
 
-\item{f}{the vector or factor that defines the groups of x (i.e. Order)}
+\item{f}{the vector or factor that groups the values of x (i.e. Order)}
 
 \item{h}{the range of hues to use}
 
@@ -25,8 +25,8 @@ subcolor_pal(x, f, h = c(0, 360) + 15, c = 100, l = 65, l.range = 20,
 \item{direction}{1=clockwise, 0=counterclockwise around color wheel}
 }
 \value{
-a list containing $`major`: the base color for each level in f; and
-   $`minor`: the color for each item in x
+a list containing `major`: the base color for each level in f; and
+   `minor`: the color for each item in x
 }
 \description{
 Picks a starting hue for each level of the factor, then returns colors

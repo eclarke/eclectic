@@ -5,11 +5,7 @@ output:
 ---
 # eclectic
 
-Miscellaneous R functions. Inspired by https://github.com/kylebittinger/kylemisc.
+Miscellaneous R functions, with a focus on microbiome data analysis. Inspired by [kylebittinger/kylemisc](https://github.com/kylebittinger/kylemisc).
 
-So far:
+See [the docs](http://eclarke.github.io/eclectic) for more info.
 
-- reading blast format 6 output files
-- creating named vector
-- subsetting and pruning count matrices
-- ggplot2 version of qiimer::saturated_rainbow (counts & proportions)
