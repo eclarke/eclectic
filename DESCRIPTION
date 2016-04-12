@@ -1,0 +1,23 @@
+Package: eclectic
+Type: Package
+Title: Miscellaneous functions for bioinformatics data
+Version: 0.1
+Date: 2015-09-10
+Author: Erik Clarke
+Maintainer: Erik Clarke <erikclarke@gmail.com>
+Description: Random collections of functions relating to plotting, reading data,
+    and working with count data.
+License: GPL
+LazyData: TRUE
+RoxygenNote: 5.0.1
+Suggests:
+    knitr,
+    ggplot2,
+    polyafit
+Imports:
+    dplyr,
+    broom,
+    lazyeval,
+    purrr,
+    qiimer,
+    tidyr
