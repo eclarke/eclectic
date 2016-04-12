@@ -35,7 +35,6 @@ named_vector <- function(.df, a, b) {
   setNames(as.character(lb), la)
 }
 
-
 #' Subset a (counts) matrix based on the column from a dataframe.
 #'
 #' This is useful for subsetting a counts matrix based on the sample IDs present
@@ -50,89 +49,6 @@ named_vector <- function(.df, a, b) {
 subset_matrix <- function(s, mat, colname="SampleID") {
   .mat <- mat[, s[[colname]]]
   .mat[rowSums(.mat) > 0, ]
-}
-
-#' Saturated rainbow for proportions
-#'
-#' Adapted from qiimer::saturated_rainbow, this provides a ggplot2
-#' scale_fill_gradientn that adopts the conventions from that scale. Namely:
-#' The lowest-abundance taxa are in dark blue, empty taxa are white, and
-#' highly-abundant taxa (> threshold) are in red.
-#'
-#' @param ... arguments passed to scale_fill_gradientn
-#' @param threshold the limit where the high-range color appears
-#' @param na.value the color to assign to missing taxa
-#' @param scale the the maximum of the proportion (i.e. is it 0-1 scaled or 0-100?)
-#' @export
-saturated_rainbow_pct <- function(..., na.value="white", threshold=.4, scale=1) {
-  rainbow_colors <- rev(rainbow(100*threshold, start=0, end=0.6))
-  last_color <- tail(rainbow_colors, n=1)
-  colors <- c(rainbow_colors, rep(last_color, 100*(1-threshold)))
-  # colors[1] <- "white"
-  ggplot2::scale_fill_gradientn(
-    na.value=na.value,
-    colors = colors,
-    limits = c(0,1)*scale,
-    breaks = seq(0.1, 0.9, by=0.2)*scale,
-    labels = paste0(seq(10, 90, by=20), "%"),
-    ...)
-}
-
-
-#' Saturated rainbow for counts
-#'
-#' Adapted from qiimer::saturated_rainbow, this provides a ggplot2
-#' scale_fill_gradientn that adopts the conventions from that scale. Namely:
-#' The lowest-abundance taxa are in dark blue, empty taxa are white, and
-#' highly-abundant taxa (> threshold) are in red.
-#'
-#' @param ... arguments passed to scale_fill_gradientn
-#' @param na.value the color to assign to missing taxa
-#' @param threshold the proportional limit where the high-range color appears
-#' @param scale the the maximum of the proportion (i.e. is it 0-1 scaled or 0-100?)
-#' @export
-saturated_rainbow_cts <- function(..., na.value="white", threshold=.4, scale=1) {
-  rainbow_colors <- rev(rainbow(100*threshold, start=0, end=0.6))
-  last_color <- tail(rainbow_colors, n=1)
-  colors <- c(rainbow_colors, rep(last_color, 100*(1-threshold)))
-  # colors[1] <- "white"
-  ggplot2::scale_fill_gradientn(
-    na.value=na.value,
-    colors=colors,
-    # limits = c(0,1)*scale,
-    # breaks = seq(0.1, 0.9, by=0.2)*scale,
-    # labels = paste0(seq(10, 90, by=20), "%"),
-    ...)
-}
-
-#' Find the dimensions of a ggplot2 heatmap.
-#'
-#' This works by identifying the number of unique points in the variables mapped
-#' to the x and y axes.
-#'
-#' @param p a ggplot2 heatmap (or any ggplot with x and y mappings)
-#' @return a list with the number of rows and columns
-#' @export
-heatmap_dims <- function(p) {
-  .x <- as.character(p$mapping$x)
-  .y <- as.character(p$mapping$y)
-  ncols <- length(unique(p$data[[.x]]))
-  nrows <- length(unique(p$data[[.y]]))
-  return(list(ncols=ncols, nrows=nrows))
-}
-
-#' Uses the number of columns and number of rows in a heatmap to fix the
-#' aspect ratio such that the cells are perfectly square.
-#'
-#' @param p a ggplot object with discrete x and y aesthetics set
-#' @param fudge a fudge factor multiplying the aspect ratio (< 1 = wider,
-#'   > 1 = taller). This does not appear to work right now.
-#' @return the same object, with the aspect ratio fixed to be the (number of
-#' rows)/(number of columns)
-#' @export
-make_square <- function(p, fudge=1) {
-  dims <- heatmap_dims(p)
-  p + ggplot2::theme(aspect.ratio = (dims$nrows/dims$ncols)*fudge)
 }
 
 #' Set zeros to NA
@@ -170,54 +86,6 @@ dynamic_chunk <- function(p, width, height, name=NULL, extras=NULL) {
 }
 
 
-#' Uses a Dirichlet multinomial distribution to test for OTUs in the first
-#' vector that are enriched.
-#'
-#' @param counts1 the first paired sample (and the target of the one-sided test)
-#' @param counts2 the second paired sample (i.e. prewash)
-#' @param p.adjust.method the method to adjust p.values for multiple testing
-#' @return a vector of adjusted p values
-#' @export
-polyatest <- function(counts1, counts2, p.adjust.method="fdr") {
-  if (!requireNamespace("polyafit")) {
-    stop("Please install the polyafit package from https://github.com/kylebittinger/polyafit")
-  }
-  if (length(counts1) == 1 | length(counts2) == 1) {
-    warning("Only one observation; returning NA for both conditions")
-    return(NaN)
-  }
-  mat <- matrix(c(as.integer(counts1), as.integer(counts2)), nrow=2, byrow=TRUE)
-  # mat <- as.integer(mat)
-  fit <- polyafit::optim_polya(mat)
-  p.values <- 1 - polyafit::ppolya_marginal(mat[1,], fit$par, log.p=FALSE)
-  p.adjust(p.values, method=p.adjust.method)
-}
-
-
-#' Test for an OTU's (inverse) correlation between its abundance and amplicon concentration.
-#'
-#' @param .df the data frame
-#' @param ... the grouping variables (unquoted), i.e. ExtractionType and SampleType
-#' @param otu the column with unique otu names
-#' @param freq the column denoting OTU proportional abundance (as string)
-#' @param conc the column containing amplicon concentration data
-#' @return the data frame with correlation results added in for each OTU
-#' @import dplyr
-#' @importFrom tidyr nest
-#' @importFrom tidyr unnest
-#' @export
-contam_test <- function(.df, ..., otu="otu", freq="freq", conc="PostPCRConc") {
-  .df %>% group_by_(.dots=lazyeval::lazy_dots(...)) %>%
-    group_by_(.dots = otu, add=TRUE) %>%
-    mutate(otuCount = n()) %>% ungroup() %>% filter(otuCount > 1) %>%
-    group_by_(.dots=lazyeval::lazy_dots(...)) %>% group_by_(.dots=otu, add=TRUE) %>%
-    nest() %>%
-    mutate(model = purrr::map(data, ~cor.test(x=.[[freq]], y=.[[conc]], alt="less", method="spearman"))) %>%
-    unnest(model %>% purrr::map(broom::glance)) %>%
-    mutate(adj.p.value = p.adjust(p.value, method="fdr")) %>%
-    unnest(data)
-}
-
 #' Agglomerates the sample metadata, counts, and taxa info into one melted df.
 #'
 #' @param s appropriately-subsetted sample metadata df
@@ -251,66 +119,5 @@ Mode <- function(x) {
   ux[which.max(tabulate(match(x, ux)))]
 }
 
-#' Finds the lowest taxonomic rank that isn't NA, stopping at `end`.
-#' @param otus the otus to look for
-#' @param taxonomy the taxa annotations, with otus as rownames (important!)
-#' @param end the lowest desired taxonomic rank
-#' @param label label the lowest rank with [kpcofgs]?
-#' @param sep separator to use between rank label and rank value
-#' @return the lowest non-NA taxonomic rank assignment
-#' @export
-tax_climber <- function(otus, taxonomy, end="Genus", label=FALSE, sep=":") {
-  end_idx <- which(qiimer::taxonomic_ranks==end)
-  otus <- as.character(otus)
-  if (all(is.na(otus)))
-    return(rep(NA, length(otus)))
-  taxa <- taxonomy[otus, 1:end_idx]
-  min.ranks <- colnames(taxa)[apply(taxa, 1, function(x) max(which(!is.na(x))))]
-  lowest <- taxa[cbind(otus, min.ranks)]
-  if (label)
-    paste(tolower(substr(min.ranks, 1, 1)), lowest, sep=sep)
-  else
-    lowest
-}
 
-#' @title Grouped color palette for factors
-#' @description
-#'    Picks a starting hue for each level of the factor, then returns colors
-#'    with that hue, but varying luminosity for each item within that factor.
-#' @param fctr the factor to create color scale for
-#' @param h the range of hues to use
-#' @param c chroma value to use
-#' @param l the base luminance [0,100]
-#' @param l.range the luminance above and below the base to use for subcolors
-#' @param h.start the starting hue
-#' @param direction 1=clockwise, 0=counterclockwise around color wheel
-#' @return a named vector of hexadecimal colors
-#' @export
-subcolor_pal <- function (fctr, h = c(0, 360) + 15, c = 100, l=65, l.range=20, h.start = 0, direction = 1)
-{
-  stopifnot(l-l.range >= 0)
-  stopifnot(l+l.range <= 100)
-  .fctr <- as.factor(fctr)
-  n = length(levels(.fctr))
-  if ((diff(h)%%360) < 1) {
-    h[2] <- h[2] - 360/n
-  }
-  rotate <- function(x) (x + h.start)%%360 * direction
-  hues <- rotate(seq(h[1], h[2], length.out = n))
-  levels(.fctr) <- hues
-  subcolors <- lapply(split(.fctr, .fctr), function(subgroup) {
-    hue = as.integer(as.character(unique(subgroup)))
-    stopifnot(length(hue) == 1)
-
-    sub_n <- length(subgroup)
-
-    if (sub_n > 1)
-      l <- seq(l-l.range, l+l.range, length.out = sub_n)
-
-    grDevices::hcl(hue, c, l)
-  })
-  minor.colors <- unsplit(subcolors, .fctr)
-  names(minor.colors) <- as.character(fctr)
-  minor.colors
-}
 

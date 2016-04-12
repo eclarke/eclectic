@@ -21,5 +21,3 @@ Imports:
     purrr,
     qiimer,
     tidyr
-Collate:
-    'eclectic.R'
