@@ -1,7 +1,7 @@
 Package: eclectic
 Type: Package
 Title: Miscellaneous functions for bioinformatics data
-Version: 0.1
+Version: 0.1.4
 Date: 2015-09-10
 Author: Erik Clarke
 Maintainer: Erik Clarke <erikclarke@gmail.com>
