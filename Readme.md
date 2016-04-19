@@ -4,4 +4,4 @@ Miscellaneous R functions, with a focus on microbiome data analysis. Inspired by
 
 See [the docs](http://eclarke.github.io/eclectic) for more info.
 
-test test
+test test test
