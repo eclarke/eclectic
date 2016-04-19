@@ -9,9 +9,9 @@ agglomerate(s, cts, taxa)
 \arguments{
 \item{s}{appropriately-subsetted sample metadata df}
 
-\item{cts}{counts matrix (colnames should be present in column 'SampleID' in 's')}
+\item{cts}{counts matrix (colnames should be present in column `SampleID' in `s')}
 
-\item{taxa}{taxonomic data (must have column named 'otu')}
+\item{taxa}{taxonomic data (must have column named `otu')}
 }
 \value{
 the agglomerated df, invisibly

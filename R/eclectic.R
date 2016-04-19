@@ -89,16 +89,20 @@ dynamic_chunk <- function(p, width, height, name=NULL, extras=NULL) {
 #' Agglomerates the sample metadata, counts, and taxa info into one melted df.
 #'
 #' @param s appropriately-subsetted sample metadata df
-#' @param cts counts matrix (colnames should be present in column 'SampleID' in 's')
-#' @param taxa taxonomic data (must have column named 'otu')
+#' @param cts counts matrix (colnames should be present in column `SampleID' in `s')
+#' @param taxa taxonomic data (must have column named `otu')
 #' @return the agglomerated df, invisibly
 #' @import dplyr
 #' @importFrom tidyr gather
 #' @export
 agglomerate <- function(s, cts, taxa) {
   .c <- cts[, colnames(cts) %in% s$SampleID]
+  precounts <- sum(.c)
+  if (precounts == 0)
+    stop("Empty counts matrix after subsetting by SampleID in 's'; are you sure the column names and SampleIDs are the same?")
   .c <- as.data.frame(.c[rowSums(.c) > 0, ])
   .c$otu <- rownames(.c)
+
 
   agg <- gather(.c, SampleID, count, -otu) %>%
     mutate_each("as.factor", SampleID, otu) %>%
@@ -106,6 +110,8 @@ agglomerate <- function(s, cts, taxa) {
     merge(s, all.x=TRUE) %>% merge(taxa, all.x=TRUE) %>%
     mutate_each("as.factor", Kingdom:Species)
 
+  if (sum(agg$count) != precounts)
+    warning("Something went wrong- there are fewer counts in the aggregated dataframe than in your subsetted counts matrix.")
   invisible(agg)
 }
 
