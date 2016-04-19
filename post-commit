@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Rebuilds the package docs after a commit.
+#
+# Move to .git/hooks/post-commit
+#
+
+git checkout gh-pages
+echo "Updating documentation..."
+git merge master -X theirs
+Rscript build-docs.R
+echo "Uploading documentation..."
+git commit -am 'updated docs' && git push
+echo "Docs updated."
+git checkout master
