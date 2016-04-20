@@ -9,11 +9,12 @@
 #'    the taxonomy with each column converted to a factor, and the levels
 #'    reordered
 #' @export
-reorder_taxa <- function(taxonomy) {
+reorder_taxa <- function(taxonomy, ranks=qiimer::taxonomic_ranks) {
+  stopifnot(length(ranks) > 1)
   ftax <- dplyr::mutate_each(taxonomy, 'as.factor')
-  for (rank in 2:7) {
-    prev.rank <- qiimer::taxonomic_ranks[[rank-1]]
-    this.rank <- qiimer::taxonomic_ranks[[rank]]
+  for (rank in 2:length(ranks)) {
+    prev.rank <- ranks[[rank-1]]
+    this.rank <- ranks[[rank]]
 
     ftax[[this.rank]] <- reorder(ftax[[this.rank]], as.numeric(ftax[[prev.rank]]))
   }
@@ -26,10 +27,13 @@ reorder_taxa <- function(taxonomy) {
 #' @param end the lowest desired taxonomic rank
 #' @param label label the lowest rank with [kpcofgs]?
 #' @param sep separator to use between rank label and rank value
+#' @param ranks a character vector of taxonomic ranks, in order
 #' @return the lowest non-NA taxonomic rank assignment
 #' @export
-tax_climber <- function(otus, taxonomy, end="Genus", label=FALSE, sep=":") {
-  end_idx <- which(qiimer::taxonomic_ranks==end)
+tax_climber <- function(otus, taxonomy, end="Genus", label=FALSE, sep=":", ranks=qiimer::taxonomic_ranks) {
+  end_idx <- which(ranks==end)
+  if (is.na(end_idx))
+    stop("End rank not found in ranks")
   otus <- as.character(otus)
   if (all(is.na(otus)))
     return(rep(NA, length(otus)))
