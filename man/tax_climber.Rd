@@ -4,7 +4,8 @@
 \alias{tax_climber}
 \title{Finds the lowest taxonomic rank that isn't NA, stopping at `end`.}
 \usage{
-tax_climber(otus, taxonomy, end = "Genus", label = FALSE, sep = ":")
+tax_climber(otus, taxonomy, end = "Genus", label = FALSE, sep = ":",
+  ranks = qiimer::taxonomic_ranks)
 }
 \arguments{
 \item{otus}{the otus to look for}
@@ -16,6 +17,8 @@ tax_climber(otus, taxonomy, end = "Genus", label = FALSE, sep = ":")
 \item{label}{label the lowest rank with [kpcofgs]?}
 
 \item{sep}{separator to use between rank label and rank value}
+
+\item{ranks}{a character vector of taxonomic ranks, in order}
 }
 \value{
 the lowest non-NA taxonomic rank assignment
