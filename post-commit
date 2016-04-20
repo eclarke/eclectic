@@ -4,12 +4,20 @@
 #
 # Move to .git/hooks/post-commit
 #
+set -e
 
-git checkout gh-pages
-echo "Updating documentation..."
-#git merge master -X theirs
-#Rscript build-docs.R
-#echo "Uploading documentation..."
-#git commit -am 'updated docs' && git push
-#echo "Docs updated."
-#git checkout master
+if [ $(git rev-parse --abbrev-ref HEAD) == "master" ]; then
+
+    git checkout gh-pages &&
+	echo "Checked out github pages branch"
+
+    git merge master -X theirs -m "merged master" &&
+	echo "Merged master branch"
+
+    Rscript build-docs.R && git commit -am 'updated docs' && git push &&
+	echo "Uploaded documentation"
+
+    git checkout master &&
+	echo "Switched back to master"
+
+fi
