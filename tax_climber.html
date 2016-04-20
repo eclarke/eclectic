@@ -52,7 +52,7 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>tax_climber(otus, taxonomy, end&nbsp;=&nbsp;"Genus", label&nbsp;=&nbsp;FALSE, sep&nbsp;=&nbsp;":")</div></pre>
+    <pre><div>tax_climber(otus, taxonomy, end&nbsp;=&nbsp;"Genus", label&nbsp;=&nbsp;FALSE, sep&nbsp;=&nbsp;":", ranks&nbsp;=&nbsp;qiimer::taxonomic_ranks)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -66,6 +66,8 @@
       <dd>label the lowest rank with [kpcofgs]?</dd>
       <dt>sep</dt>
       <dd>separator to use between rank label and rank value</dd>
+      <dt>ranks</dt>
+      <dd>a character vector of taxonomic ranks, in order</dd>
     </dl>
     
     <div class="Value">
