@@ -4,7 +4,7 @@
 \alias{reorder_taxa}
 \title{Reorder levels of subtaxa by parent taxa}
 \usage{
-reorder_taxa(taxonomy)
+reorder_taxa(taxonomy, ranks = qiimer::taxonomic_ranks)
 }
 \arguments{
 \item{taxonomy}{the taxonomy data frame, with columns for each [kpcofgs] rank}
