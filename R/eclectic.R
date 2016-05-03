@@ -107,8 +107,7 @@ agglomerate <- function(s, cts, taxa) {
   agg <- gather(.c, SampleID, count, -otu) %>%
     mutate_each("as.factor", SampleID, otu) %>%
     filter(count > 0) %>%
-    merge(s, all.x=TRUE) %>% merge(taxa, all.x=TRUE) %>%
-    mutate_each("as.factor", Kingdom:Species)
+    merge(s, all.x=TRUE) %>% merge(taxa, all.x=TRUE)
 
   if (sum(agg$count) != precounts)
     warning("Something went wrong- there are fewer counts in the aggregated dataframe than in your subsetted counts matrix.")
