@@ -14,7 +14,7 @@ prune_tree <- function(tree, otus) {
 #' @export
 root_tree <- function(tree, otus) {
   # Root the tree using a random node as the root
-  .rtree <- root(tree, sample(tree$tip.label, 1), resolve.root = TRUE)
+  .rtree <- ape::root(tree, sample(tree$tip.label, 1), resolve.root = TRUE)
   stopifnot(ape::is.rooted(.rtree))
   return(.rtree)
 }
