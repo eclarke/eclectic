@@ -12,4 +12,3 @@ blast6_colnames
 Default BLAST outfmt 6 column names
 }
 \keyword{datasets}
-

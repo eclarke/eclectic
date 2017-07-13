@@ -32,4 +32,3 @@ a list containing `major`: the base color for each level in f; and
 Picks a starting hue for each level of the factor, then returns colors
    with that hue, but varying luminosity for each item within that factor.
 }
-

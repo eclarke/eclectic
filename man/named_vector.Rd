@@ -21,4 +21,3 @@ The levels of `a` are used to pick the corresponding values in `b` so that
 the named vector returned can be used in e.g. ggplot2::scale label
 parameters.
 }
-

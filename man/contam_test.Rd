@@ -23,4 +23,3 @@ the data frame with correlation results added in for each OTU
 \description{
 Test for an OTU's (inverse) correlation between its abundance and amplicon concentration.
 }
-

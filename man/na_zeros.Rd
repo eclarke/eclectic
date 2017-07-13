@@ -13,4 +13,3 @@ na_zeros(p)
 Set zeros in the data mapped to the fill aesthetic to NA, allowing them to
 be given a specific color in the heatmap independent of the fill scale.
 }
-

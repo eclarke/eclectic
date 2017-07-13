@@ -20,4 +20,3 @@ dynamic_chunk(p, width, height, name = NULL, extras = NULL)
 \description{
 Creates a chunk for a plot with a given figure height and width.
 }
-

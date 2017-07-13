@@ -15,4 +15,3 @@ defined in `blast6_colnames` (default)}
 \description{
 Reads an output file from BLAST in the outfmt=6 format (tab delimited)
 }
-

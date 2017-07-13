@@ -21,4 +21,3 @@ This is useful for subsetting a counts matrix based on the sample IDs present
 in the sample data dataframe. It then prunes the matrix to remove any rows
 whose sums are 0.
 }
-

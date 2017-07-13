@@ -18,4 +18,3 @@ Reorders the levels of each taxonomic rank to be arranged by the rank
    above it, so that e.g. each class level is ordered by the phylum it
    belongs to, and so on.
 }
-

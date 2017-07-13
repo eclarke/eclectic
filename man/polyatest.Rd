@@ -21,4 +21,3 @@ a vector of adjusted p values
 Uses a Dirichlet multinomial distribution to test for OTUs in the first
 vector that are enriched.
 }
-

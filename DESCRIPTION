@@ -9,7 +9,7 @@ Description: Random collections of functions relating to plotting, reading data,
     and working with count data.
 License: GPL
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Suggests:
     knitr,
     ggplot2,

@@ -15,4 +15,3 @@ the mode
 \description{
 Find the mode of a logical or numeric vector
 }
-

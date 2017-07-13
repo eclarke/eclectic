@@ -19,4 +19,3 @@ the agglomerated df, invisibly
 \description{
 Agglomerates the sample metadata, counts, and taxa info into one melted df.
 }
-

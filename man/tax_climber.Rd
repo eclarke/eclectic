@@ -26,4 +26,3 @@ the lowest non-NA taxonomic rank assignment
 \description{
 Finds the lowest taxonomic rank that isn't NA, stopping at `end`.
 }
-
