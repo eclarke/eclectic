@@ -125,4 +125,29 @@ Mode <- function(x) {
 }
 
 
-
+#' Creates a counts matrix from an agglomerated data frame.
+#'
+#' Optionally, metadata columns can be included (useful for some functions), in
+#' which case the output is a data.frame, not a matrix.
+#' @param agg agglomerated data frame
+#' @param additional.columns any columns to include as columns in the matrix
+#' @return default: a numeric matrix with otu as rows and samples as columns. If
+#'   additional columns specified, a data.frame with otus as columns and samples
+#'   as rows
+#' @export
+counts_matrix <- function(agg, additional.columns) {
+  cols <- c("otu", "SampleID", "count")
+  if (!missing(additional.columns)) cols <- c(cols, additional.columns)
+  .mat <- agg %>% select_(.dots=cols) %>%
+    spread(SampleID, count, fill=0) %>%
+    as.data.frame %>%
+    filter(!is.na(otu))
+  if (!missing(additional.columns)) {
+    return(.mat)
+  } else {
+    rownames(.mat) <- .mat$otu
+    .mat$otu <- NULL
+    .mat <- t(as.matrix(.mat))
+    return(.mat)
+  }
+}
