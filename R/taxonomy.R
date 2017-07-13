@@ -45,3 +45,22 @@ tax_climber <- function(otus, taxonomy, end="Genus", label=FALSE, sep=":", ranks
   else
     lowest
 }
+
+#' Creates a MinRank vector from an agglomerated data frame.
+#'
+#' Version of \link{tax_climber} for use inside \link{dplyr::mutate} or directly
+#' assign to col. MinRank columns are the most specific taxonomic assignments
+#' (up to a threshold)
+#' @param agg \link{agglomerate}d data frame (with taxonomic ranks)
+#' @param end.rank the most specific taxonomic rank if available
+#' @param rank a character vector of taxonomic ranks present in agg
+#' @param ... additional arguments passed to \link{tax_climber}
+#' @export
+min_rank <- function(agg, end.rank, ranks=qiimer::taxonomic_ranks, ...) {
+  .agg <- filter(agg, !is.na(otu))
+  md <- .agg[,c(ranks, "otu")]
+  md <- data.frame(distinct(md))
+  rownames(md) <- md$otu
+  minrank <- tax_climber(md$otu, md, end=end.rank, ranks=ranks, ...)
+  left_join(select(agg, otu), data.frame(otu=md$otu, MinRank=minrank))$MinRank
+}
