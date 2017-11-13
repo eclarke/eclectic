@@ -101,10 +101,10 @@ MakeHeatmapData <- function(
   hclust_method="average",  ...) {
   # Create the y-axes for the data via the desired taxonomic rank level(s)
   .agg <- agg %>% mutate(
-    MinRank1 = min_rank(agg, end=min.rank.1, ...))
+    MinRank1 = eclectic::min_rank(agg, end=min.rank.1, ...))
   if (!is.na(min.rank.2)) {
     .agg <- .agg %>% mutate(
-      MinRank2 = min_rank(agg, end=min.rank.2, ...),
+      MinRank2 = eclectic::min_rank(agg, end=min.rank.2, ...),
       MinRank1 = paste(MinRank2, MinRank1)
     )
   }
